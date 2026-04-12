@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\Calculo;
 
 class CalculadoraController extends Controller
 {
@@ -34,12 +35,30 @@ class CalculadoraController extends Controller
             ], 422);
         }
 
-        // Devolver el resultado en JSON
-        return response()->json([
+        // Guardar el cálculo en la base de datos
+        $calculo = Calculo::create([
             'numero1'   => $a,
             'numero2'   => $b,
             'operacion' => $request->operacion,
             'resultado' => $resultado,
         ]);
+
+        // Devolver el resultado en JSON
+        return response()->json([
+            'id'        => $calculo->id,
+            'numero1'   => $a,
+            'numero2'   => $b,
+            'operacion' => $request->operacion,
+            'resultado' => $resultado,
+            'fecha'     => $calculo->created_at,
+        ]);
+    }
+
+    public function historial(): JsonResponse
+    {
+        // Devolver los últimos 10 cálculos ordenados por fecha
+        $calculos = Calculo::latest()->take(10)->get();
+
+        return response()->json($calculos);
     }
 }
