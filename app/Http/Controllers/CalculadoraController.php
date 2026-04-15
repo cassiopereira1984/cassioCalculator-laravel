@@ -31,7 +31,7 @@ class CalculadoraController extends Controller
         // Caso especial: división por cero
         if ($resultado === null) {
             return response()->json([
-                'error' => 'División por cero no permitida'
+                'error' => 'Division por cero no permitida'
             ], 422);
         }
 
